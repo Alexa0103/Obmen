@@ -2,11 +2,11 @@ import requests
 import json
 from tkinter import  *
 from tkinter import  messagebox as mb
-
+from tkinter import ttk
 
 def exchange():
-    code = entry.get().upper() # из поля ввода энтри получаем код валюты, upper - преобразование букв в заглавные
-
+    #code = entry.get().upper() # из поля ввода энтри получаем код валюты, upper - преобразование букв в заглавные
+    code = combobox.get()
     if code:
         try:
             response = requests.get(f'https://open.er-api.com/v6/latest/USD')
@@ -31,10 +31,15 @@ window = Tk()
 window.title("Курс обмена валюты к доллару")
 window.geometry("360x180")
 
-Label(text="Введите код валюты:").pack(padx=10, pady=10)
+Label(text="Выберите код валюты:").pack(padx=10, pady=10)
 
-entry = Entry()
-entry.pack(padx=10, pady=10)
+# Список 10 популярных валют
+popular_currencies = ["EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "RUB", "KZT", "UZS"]
+combobox = ttk.Combobox(values=popular_currencies)
+combobox.pack(padx=10, pady=10)
+
+#entry = Entry()
+#entry.pack(padx=10, pady=10)
 
 Button(text="Получить курс обмена к доллару", command=exchange).pack(padx=10, pady=10)
 
