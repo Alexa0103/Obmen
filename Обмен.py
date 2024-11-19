@@ -5,12 +5,19 @@ from tkinter import  messagebox as mb
 from tkinter import ttk
 
 
-def update_currency_label(event):
+def update_base_label(event):
     # Получаем полное название валюты из словаря и обновляем метку
+    code = base_combobox.get()
+    name = currencies[code]
+    base_label.config(text=name)#метка с названием базовой валюты под комбобоксом
+
+
+def update_target_label(event):
     # Получаем полное название валюты из словаря и обновляем метку
     code = target_combobox.get()
     name = currencies[code]
-    currency_label.config(text=name)#метка с названием валюты под комбобоксом
+    target_label.config(text=name) # меткас названием целевой валюты под комбобоксом
+
 
 def exchange():
     #code = entry.get().upper() # из поля ввода энтри получаем код валюты, upper - преобразование букв в заглавные
@@ -21,7 +28,7 @@ def exchange():
     if target_code and base_code:
         try:
             response = requests.get(f'https://open.er-api.com/v6/latest/{base_code}')
-            response.raise_for_status()
+            #response.raise_for_status()
             data = response.json()
             if target_code in data['rates']:
                 exchange_rate = data['rates'][target_code]
@@ -55,7 +62,7 @@ currencies = {
 # Создание графического интерфейса
 window = Tk()
 window.title("Курс обмена валюты")
-window.geometry("360x200")
+window.geometry("360x300")
 
 '''Label(text="Выберите код валюты:").pack(padx=10, pady=10)
 
@@ -68,18 +75,19 @@ combobox.bind("<<ComboboxSelected>>", update_currency_label)'''
 Label(text="Базовая валюта:").pack(padx=10, pady=5)
 base_combobox = ttk.Combobox(values=list(currencies.keys()))
 base_combobox.pack(padx=10, pady=5)
+base_combobox.bind("<<ComboboxSelected>>", update_base_label)
+
+base_label = ttk.Label()
+base_label.pack(padx=10, pady=10)
 
 Label(text="Целевая валюта:").pack(padx=10, pady=5)
 target_combobox = ttk.Combobox(values=list(currencies.keys()))
 target_combobox.pack(padx=10, pady=5)
-target_combobox.bind("<<ComboboxSelected>>", update_currency_label)
+target_combobox.bind("<<ComboboxSelected>>", update_target_label)
 
-currency_label = ttk.Label()
-currency_label.pack(padx=10, pady=10)
+target_label = ttk.Label()
+target_label.pack(padx=10, pady=10)
 
 Button(text="Получить курс обмена", command=exchange).pack(padx=10, pady=10)
 
 window.mainloop()
-
-
-
