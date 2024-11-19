@@ -1,30 +1,29 @@
 import requests
 import json
-import pprint
 from tkinter import  *
 from tkinter import  messagebox as mb
 
 
 def exchange():
-    code = entry.get().upper()
+    code = entry.get().upper() # из поля ввода энтри получаем код валюты, upper - преобразование букв в заглавные
 
     if code:
         try:
             response = requests.get(f'https://open.er-api.com/v6/latest/USD')
-            response.raise_for_status()
+            response.raise_for_status() # если код 200 - все отлично
             data = response.json()
 
-            if code in data['rates']:
+            if code in data['rates']: #смотрим, есть ли внутри раздела "rates" заданная валюта
                 exchange_rate = data['rates'][code]
 
-                mb.showinfo("Курс обмена", f"Курс к доллару: {exchange_rate:.1f} {code} за 1 доллар")
+                mb.showinfo("Курс обмена", f"Курс к доллару: {exchange_rate:.2f} {code} за 1 доллар")
             else:
-                mb.showerror("Ошибка", f"Валюта {code} не найдена")
+                mb.showerror("Ошибка!", f"Валюта {code} не найдена!")
         except Exception as e:
-            mb.showerror("Ошибка", f"Ошибка: {e}")
+            mb.showerror("Ошибка!", f"Произошла ошибка: {e}")
 
     else:
-        mb.showwarning("Внимание", "Введите код валюты")
+        mb.showwarning("Внимание!", "Введите код валюты!")
 
 
 # Создание графического интерфейса
